@@ -8,8 +8,10 @@ const Pokemon = () => {
         pokemonImg : '',
     })
     const [info, setInfo] = useState("")
+    const [answer, setAnswer] = useState(null)
+    const [revealAnswer, setRevealAnswer] = useState(false)
 
-    const randomNumber = (min = 1, max = 151) => {
+    const randomNumber = (min = 1, max = 493) => {
         return Math.floor(Math.random() * (max - min + 1)) + min
     }
 
@@ -32,8 +34,33 @@ const Pokemon = () => {
     }, [])
 
     const handleSubmit = () =>{
-        console.log(info)
+        if(info.length !== 0) {
+            if(info.trim().toLowerCase() === pokemonName) {
+                console.log('correct!')
+                setAnswer(true)
+            } else {
+                console.log('incorrect')
+                setAnswer(false)
+            }
+        }
         setInfo('')
+    }
+
+    const handleKeyDown = (e) => {
+        if(e.key === 'Enter') {
+            handleSubmit()
+        }
+    }
+
+    const nextPokemon = () => {
+        fetchPokemon()
+        setAnswer(null)
+        setRevealAnswer(false)
+    }
+
+    const showAnswer = () => {
+        setRevealAnswer(true)
+        console.log('show answer')
     }
 
     const {pokemonName, pokemonImg} = name
@@ -41,30 +68,33 @@ const Pokemon = () => {
         <>
             <h2 style={{color: 'yellow'}}>Who's that Pokemon?!?</h2>
             <img style={{width: '300px'}} src={pokemonImg} alt={pokemonName} />
-            {pokemonName && (
-                <h2 style={{color: 'yellow', textTransform: 'capitalize'}}>
-                    Correct It's {pokemonName}!
-                </h2>
-            )}
-            <label htmlFor='userEntry'>Enter Name:</label>
-            <input type='text' id='userEntry' onChange={(e) => setInfo(e.target.value)} />
-            <button onClick={handleSubmit}>Submit</button>
+            {revealAnswer && <h2 style={{color: 'yellow', textTransform: 'capitalize'}}>It's {pokemonName}!</h2>}
+            {answer !== null ? (
+                answer ? (
+                    <h2 style={{color: 'yellow', textTransform: 'capitalize'}}>
+                        Correct It's {pokemonName}!
+                    </h2> ) : (
+                    <h2 style={{color: 'yellow', textTransform: 'capitalize'}}>
+                        Incorrect - Try again?
+                    </h2>
+                    )
+                ) : null
+            }
+            <div>
+                <label style={{fontSize: '.9em', marginRight: '1rem', color: 'yellow'}} htmlFor='userEntry'>Enter Name:</label>
+                <input 
+                    type='text' 
+                    id='userEntry'
+                    value={info} 
+                    onChange={(e) => setInfo(e.target.value)} 
+                    onKeyDown={(e) => handleKeyDown(e)}
+                />
+                <button onClick={handleSubmit}>Submit</button>
+            </div>
+            <button className='btn' onClick={() => showAnswer()}>Show Answer</button>
+            <button className='btn' onClick={() => nextPokemon()}>Next Pokemon</button>
         </>
     )
 }
 
 export default Pokemon
-
-//Notes
-//Determined that API call for multiple pokemon entries only returns name and url
-//additional API calls are needed to get detailed info, might as well just do individual calls
-
-//Issues to work on
-//1. Add functionality to use 'enter' key - onKeyDown handler to input field
-//2. Clear input field upon hitting submit key, issue with setInfo('') ln 36
-//3. Add functionality to compare user input with {pokemonName}
-    //3A if(userInput.length !== 0) - prevent anything from happening when field is empty
-    //3B if(userInput === pokemonName) - check if user is correct, if so return correct / incorrect!
-//4. add button to generate new pokemon
-
-//Future changes - figure out css to grey out pokemonImg until user guesses

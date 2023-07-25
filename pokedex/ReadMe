@@ -1,0 +1,15 @@
+//Notes
+//Determined that API call for multiple pokemon entries only returns name and url
+//additional API calls are needed to get detailed info, might as well just do individual calls
+
+//Issues to work on
+//1. Add functionality to use 'enter' key - onKeyDown handler to input field - DONE
+//2. Clear input field upon hitting submit key, issue with setInfo('') ln 36 - DONE
+//3. Add functionality to compare user input with {pokemonName} - DONE
+    //3A if(userInput.length !== 0) - prevent anything from happening when field is empty
+    //3B if(userInput === pokemonName) - check if user is correct, if so return correct / incorrect!
+//4. add button to generate new pokemon - DONE
+//5. add show answer button if user gives up
+
+//Future changes - 1. figure out css to grey out pokemonImg until user guesses
+//Make it Pretty
